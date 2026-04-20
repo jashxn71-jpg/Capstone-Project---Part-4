@@ -1,0 +1,121 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: #0d1117;
+  color: #e6edf3;
+}
+
+header {
+  text-align: center;
+  padding: 1.5rem;
+  background: #161b22;
+}
+
+nav {
+  margin-top: 10px;
+}
+
+nav button {
+  margin: 5px;
+  padding: 8px 15px;
+}
+
+main {
+  padding: 1rem;
+  max-width: 1000px;
+  margin: auto;
+}
+
+.card {
+  background: #161b22;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 12px;
+}
+
+.hero {
+  text-align: center;
+  padding: 3rem 1rem;
+  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+
+input, button {
+  padding: 10px;
+  margin-top: 10px;
+  width: 100%;
+}
+
+button {
+  background: #238636;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #2ea043;
+}
+
+img {
+  width: 100%;
+  border-radius: 10px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
+.error {
+  color: #ff6b6b;
+}
+
+/* Gallery Grid */
+#apodContainer {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+}
+
+.gallery-item {
+  background: #0d1117;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+/* Spinner */
+.spinner {
+  border: 4px solid #333;
+  border-top: 4px solid #58a6ff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin: 20px auto;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@media (min-width: 768px) {
+  #apodContainer {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  form {
+    display: flex;
+    gap: 10px;
+  }
+  input {
+    flex: 1;
+  }
+  button {
+    width: auto;
+  }
+}

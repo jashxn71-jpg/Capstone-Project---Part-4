@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>APOD Explorer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>APOD Explorer</h1>
+  <nav>
+    <button id="homeBtn">Home</button>
+    <button id="galleryBtn">Gallery</button>
+  </nav>
+</header>
+
+<main>
+  <!-- HOME SECTION -->
+  <section id="homeSection">
+
+    <section class="hero">
+      <h1>Explore the Universe</h1>
+      <p>Discover NASA’s Astronomy Picture of the Day</p>
+    </section>
+
+    <section class="card">
+      <form id="dateForm">
+        <input type="date" id="date" required>
+        <button type="submit">Search</button>
+      </form>
+      <p id="error" class="error"></p>
+    </section>
+<section class="card">
+  <h3>Search History</h3>
+  <ul id="history"></ul>
+    </section>
+  </section>
+  <!-- GALLERY SECTION -->
+  <section id="gallerySection" class="hidden">
+    <section id="apodContainer" class="card"></section>
+  </section>
+  <!-- FAVOURITES -->
+  <section class="card">
+    <h2>⭐ Favourites</h2>
+    <input type="text" id="filterFav" placeholder="Filter favourites...">
+    <div id="favourites"></div>
+  </section>
+</main>
+<footer>
+  <p>© 2026 APOD Explorer</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
