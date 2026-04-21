@@ -7,7 +7,7 @@ const errorText = document.getElementById("error");
 const homeSection = document.getElementById("homeSection");
 const gallerySection = document.getElementById("gallerySection");
 
-const API_KEY = "DEMO_KEY"; // replace
+const API_KEY = "GdYJnYlFMYpBpyIVOuWMJwPjrSMBnK8rzTeKgYEO";
 
 // NAVIGATION
 document.getElementById("homeBtn").addEventListener("click", () => {
@@ -36,40 +36,49 @@ form.addEventListener("submit", (e) => {
   fetchAPOD(date);
   saveSearch(date);
 
-  // auto switch to gallery
   homeSection.classList.add("hidden");
   gallerySection.classList.remove("hidden");
 });
 
-// FETCH 8 IMAGES
+
+// 🔥 SMART FETCH (guarantees images)
 async function fetchAPOD(date) {
   apodContainer.innerHTML = `<div class="spinner"></div>`;
 
+  let collectedImages = [];
+  let currentDate = new Date(date);
+
   try {
-    const endDate = date;
-    const start = new Date(date);
-    start.setDate(start.getDate() - 7); // 8 days total
-    const startDate = start.toISOString().split("T")[0];
+    while (collectedImages.length < 8) {
+      const formatted = currentDate.toISOString().split("T")[0];
 
-    const res = await fetch(
-      `https://api.nasa.gov/planetary/apod?api_key=${API_KEY}&start_date=${startDate}&end_date=${endDate}`
-    );
+      const res = await fetch(
+        `https://api.nasa.gov/planetary/apod?api_key=${API_KEY}&date=${formatted}`
+      );
 
-    const data = await res.json();
-    renderGallery(data.reverse());
+      const data = await res.json();
+
+      if (data.media_type === "image" && data.url) {
+        collectedImages.push(data);
+      }
+
+      // go back one day
+      currentDate.setDate(currentDate.getDate() - 1);
+    }
+
+    renderGallery(collectedImages);
 
   } catch {
     apodContainer.innerHTML = "<p>Error loading images.</p>";
   }
 }
 
+
 // RENDER
 function renderGallery(images) {
   apodContainer.innerHTML = "";
 
   images.forEach(item => {
-    if (item.media_type !== "image") return;
-
     const div = document.createElement("div");
     div.classList.add("gallery-item");
 
@@ -91,6 +100,7 @@ function renderGallery(images) {
     apodContainer.appendChild(div);
   });
 }
+
 
 // FAVOURITES
 function saveFavourite(data) {
@@ -144,6 +154,7 @@ function deleteFavourite(index) {
   renderFavourites();
 }
 
+
 // FILTER
 document.getElementById("filterFav").addEventListener("input", (e) => {
   const keyword = e.target.value.toLowerCase();
@@ -167,6 +178,7 @@ document.getElementById("filterFav").addEventListener("input", (e) => {
   });
 });
 
+
 // HISTORY
 function saveSearch(date) {
   let history = JSON.parse(localStorage.getItem("history")) || [];
@@ -177,20 +189,28 @@ function saveSearch(date) {
   }
   renderHistory();
 }
+
 function renderHistory() {
   const historyList = document.getElementById("history");
   let history = JSON.parse(localStorage.getItem("history")) || [];
+
   historyList.innerHTML = "";
+
   history.forEach(date => {
     const li = document.createElement("li");
     li.textContent = date;
+
     li.addEventListener("click", () => {
       fetchAPOD(date);
       homeSection.classList.add("hidden");
       gallerySection.classList.remove("hidden");
     });
+
     historyList.appendChild(li);
   });
 }
+
+
+// INIT
 renderFavourites();
 renderHistory();
