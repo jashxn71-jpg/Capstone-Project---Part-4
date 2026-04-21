@@ -20,7 +20,7 @@ document.getElementById("galleryBtn").addEventListener("click", () => {
   gallerySection.classList.remove("hidden");
 });
 
-// FORM
+// FORM SUBMIT
 form.addEventListener("submit", (e) => {
   e.preventDefault();
 
@@ -41,40 +41,55 @@ form.addEventListener("submit", (e) => {
 });
 
 
-// 🔥 SMART FETCH (guarantees images)
+// FETCH APOD
 async function fetchAPOD(date) {
   apodContainer.innerHTML = `<div class="spinner"></div>`;
 
   let collectedImages = [];
   let currentDate = new Date(date);
+  let attempts = 0;
 
   try {
-    while (collectedImages.length < 8) {
+    while (collectedImages.length < 8 && attempts < 15) {
       const formatted = currentDate.toISOString().split("T")[0];
 
       const res = await fetch(
         `https://api.nasa.gov/planetary/apod?api_key=${API_KEY}&date=${formatted}`
       );
 
+      // skip bad responses safely
+      if (!res.ok) {
+        currentDate.setDate(currentDate.getDate() - 1);
+        attempts++;
+        continue;
+      }
+
       const data = await res.json();
 
+      // only accept images
       if (data.media_type === "image" && data.url) {
         collectedImages.push(data);
       }
 
-      // go back one day
       currentDate.setDate(currentDate.getDate() - 1);
+      attempts++;
+    }
+
+    if (collectedImages.length === 0) {
+      apodContainer.innerHTML = "<p>No images found. Try another date.</p>";
+      return;
     }
 
     renderGallery(collectedImages);
 
-  } catch {
-    apodContainer.innerHTML = "<p>Error loading images.</p>";
+  } catch (err) {
+    console.error(err);
+    apodContainer.innerHTML = "<p>Network error. Try again.</p>";
   }
 }
 
 
-// RENDER
+// RENDER GALLERY
 function renderGallery(images) {
   apodContainer.innerHTML = "";
 
@@ -187,6 +202,7 @@ function saveSearch(date) {
     history.push(date);
     localStorage.setItem("history", JSON.stringify(history));
   }
+
   renderHistory();
 }
 
